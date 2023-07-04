@@ -18,10 +18,10 @@ data:
       ssl => false
       }
     }
-    output {\n
-      google_pubsub {\n
-        project_id => [\"graceful-system-384713\"]\n
-        topic => [\"elasticsearch\"]\n
-        json_key_file => [\"/usr/share/logstash/pubsub/graceful-system-pub.json\"]\n
-      }\n
-    }\n"
+    output {
+      stdout {
+        codec => rubydebug
+        workers => 2
+      }
+    }
+    "
