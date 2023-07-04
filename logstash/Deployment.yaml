@@ -28,8 +28,8 @@ spec:
           mountPath: /usr/share/logstash/config
         - name: pipeline
           mountPath: /usr/share/logstash/pipeline
-        - name: pubsub
-          mountPath: /usr/share/logstash/pubsub
+            #        - name: pubsub
+            #          mountPath: /usr/share/logstash/pubsub
       volumes:
       - name: config
         configMap:
@@ -43,11 +43,11 @@ spec:
           items:
           - key: pipeline.conf
             path: pipeline.conf
-      - name: pubsub
-        configMap:
-          name: logstash-pub
-          items:
-          - key: graceful-system-pub.json
-            path: graceful-system-pub.json
+              #      - name: pubsub
+              #        configMap:
+              #          name: logstash-pub
+              #          items:
+              #          - key: graceful-system-pub.json
+              #            path: graceful-system-pub.json
       securityContext:
         fsGroup: 101
