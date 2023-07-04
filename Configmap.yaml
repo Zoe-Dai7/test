@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+  namespace: kube-system
+  labels:
+    task: logging
+    app: logstash
+data:
+  logstash.yml: |
+    http.host: "0.0.0.0"
+    path.config: /usr/share/logstash/pipeline
+  pipeline.conf: "
+    input {
+      beats {
+      port => 5000
+      type => \"kube-logs\"
+      ssl => false
+      }
+    }
+    output {\n
+      google_pubsub {\n
+        project_id => [\"graceful-system-384713\"]\n
+        topic => [\"elasticsearch\"]\n
+        json_key_file => [\"/usr/share/logstash/pubsub/graceful-system-pub.json\"]\n
+      }\n
+    }\n"

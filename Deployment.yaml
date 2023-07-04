@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  namespace: kube-system
+  labels:
+    app: logstash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        task: logging
+        app: logstash
+    spec:
+      containers:
+      - name: logstash
+        image: zoedai/logstash:1.0.0
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5000
+            name: tcp
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/logstash/config
+        - name: pipeline
+          mountPath: /usr/share/logstash/pipeline
+        - name: pubsub
+          mountPath: /usr/share/logstash/pubsub
+      volumes:
+      - name: config
+        configMap:
+          name: logstash-config
+          items:
+          - key: logstash.yml
+            path: logstash.yml
+      - name: pipeline
+        configMap:
+          name: logstash-config
+          items:
+          - key: pipeline.conf
+            path: pipeline.conf
+      - name: pubsub
+        configMap:
+          name: logstash-pub
+          items:
+          - key: graceful-system-pub.json
+            path: graceful-system-pub.json
+      securityContext:
+        fsGroup: 101
